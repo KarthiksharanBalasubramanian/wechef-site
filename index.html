@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WeChef — Elevate · Learn · Excel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --dark:#1a0a00;
+  --maroon:#7a1010;
+  --maroon-mid:#9b1c1c;
+  --copper:#b85c2a;
+  --copper-l:#d4773f;
+  --gold:#c9963a;
+  --gold-l:#e8b84b;
+  --cream:#faf7f0;
+  --warm:#fffdf7;
+  --muted:#7a6a5a;
+  --border:#e8ddd0;
+  --fd:'Playfair Display',Georgia,serif;
+  --fb:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--dark);font-family:var(--fb);font-weight:300;line-height:1.7;overflow-x:hidden;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:18px 6%;background:rgba(250,247,240,0.94);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:all .3s;}
+nav.scrolled{border-color:var(--border);padding:12px 6%;}
+.nav-logo{font-family:var(--fd);font-size:30px;font-weight:900;color:var(--dark);text-decoration:none;letter-spacing:-0.5px;}
+.nav-logo span{color:var(--copper);}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-size:12px;font-weight:400;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--copper);}
+.nav-cta{background:var(--maroon);color:#fff;padding:10px 22px;border-radius:2px;font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:background .2s;}
+.nav-cta:hover{background:var(--dark);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--dark);}
+.mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;background:var(--cream);border-bottom:1px solid var(--border);padding:20px 6%;z-index:199;flex-direction:column;gap:0;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-size:14px;color:var(--dark);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);}
+
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:70px;overflow:hidden;}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:80px 5% 80px 8%;position:relative;z-index:2;}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:24px;}
+.eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--gold);}
+h1{font-family:var(--fd);font-size:clamp(36px,4.2vw,62px);font-weight:700;line-height:1.07;color:var(--dark);letter-spacing:-1px;margin-bottom:20px;}
+h1 em{font-style:italic;color:var(--copper);}
+.hero-sub{font-size:15px;color:var(--muted);max-width:420px;line-height:1.8;margin-bottom:28px;}
+.hero-tagline{font-family:var(--fd);font-style:italic;font-size:14px;color:var(--gold);margin-bottom:32px;border-left:2px solid var(--gold);padding-left:14px;line-height:1.6;}
+.btn-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.btn-primary{background:var(--maroon);color:#fff;padding:14px 30px;border-radius:2px;font-size:12px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;transition:background .2s,transform .15s;}
+.btn-primary:hover{background:var(--dark);transform:translateY(-1px);}
+.btn-ghost{color:var(--dark);font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:color .2s;}
+.btn-ghost:hover{color:var(--copper);}
+.btn-ghost::after{content:'→';}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:36px;padding-top:28px;border-top:1px solid var(--border);}
+.chip{font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--muted);background:var(--warm);}
+
+.hero-right{background:var(--maroon);position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(150deg,#7a1010 0%,#4a0808 40%,#2a0404 100%);}
+.hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 40%,rgba(201,150,58,.18) 0%,transparent 55%),radial-gradient(circle at 20% 80%,rgba(184,92,42,.15) 0%,transparent 45%);}
+.hero-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 40px;text-align:center;}
+.hero-ring{width:160px;height:160px;border-radius:50%;border:1px solid rgba(201,150,58,.3);display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:28px;}
+.hero-ring::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(201,150,58,.12);}
+.hero-ring-inner{font-family:var(--fd);color:rgba(255,255,255,.95);text-align:center;}
+.hri-big{font-size:48px;font-style:italic;font-weight:400;line-height:1;display:block;color:var(--gold-l);}
+.hri-small{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);display:block;margin-top:6px;}
+.hero-motto{font-family:var(--fd);font-size:14px;font-style:italic;color:rgba(255,255,255,.65);margin-bottom:24px;line-height:1.65;max-width:240px;}
+.hero-strip{display:flex;border:1px solid rgba(255,255,255,.1);border-radius:2px;overflow:hidden;}
+.hs-seg{padding:8px 14px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);border-right:1px solid rgba(255,255,255,.1);}
+.hs-seg:last-child{border-right:none;}
+.fcard{position:absolute;background:var(--warm);border-radius:3px;box-shadow:0 14px 40px rgba(0,0,0,.3);padding:13px 17px;animation:bob 3.5s ease-in-out infinite;}
+.fcard.fc1{bottom:44px;left:-14px;}
+.fcard.fc2{top:52px;right:-6px;animation-delay:.6s;padding:0;}
+.fc-tag{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);font-weight:500;margin-bottom:3px;}
+.fc-title{font-family:var(--fd);font-size:14px;color:var(--dark);font-weight:600;}
+.fc2-inner{background:var(--gold);padding:12px 16px;border-radius:3px;}
+.fc2-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.65);}
+.fc2-val{font-family:var(--fd);font-size:18px;color:#fff;font-weight:700;margin-top:2px;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+section{padding:96px 8%;}
+.sec-tag{display:inline-flex;align-items:center;gap:9px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);font-weight:500;margin-bottom:14px;}
+.sec-tag::before{content:'';display:block;width:18px;height:1px;background:var(--copper);}
+h2{font-family:var(--fd);font-size:clamp(28px,3.5vw,48px);font-weight:700;line-height:1.1;color:var(--dark);letter-spacing:-.5px;margin-bottom:14px;}
+h2 em{font-style:italic;color:var(--copper);}
+.sec-sub{font-size:15px;color:var(--muted);max-width:520px;line-height:1.8;margin-bottom:48px;}
+
+.coverage-bar{background:var(--gold);padding:15px 8%;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+.cov-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7);font-weight:500;}
+.cov-pin{font-size:13px;font-weight:500;color:#fff;}
+.cov-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.4);}
+
+.about{background:var(--warm);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+.about-visual{position:relative;}
+.about-img{width:100%;aspect-ratio:3/4;background:linear-gradient(145deg,#4a0808 0%,#7a1010 45%,#b85c2a 100%);border-radius:3px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.about-img::after{content:'WeChef';font-family:var(--fd);font-size:88px;font-weight:700;font-style:italic;color:rgba(255,255,255,.05);position:absolute;bottom:-8px;right:-8px;line-height:1;}
+.chef-icon{font-size:88px;filter:drop-shadow(0 10px 26px rgba(0,0,0,.35));position:relative;z-index:1;}
+.about-badge{position:absolute;bottom:-18px;right:-18px;width:104px;height:104px;background:var(--maroon);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 10px 32px rgba(122,16,16,.4);}
+.ab-name{font-family:var(--fd);font-size:10px;color:rgba(255,255,255,.85);text-align:center;line-height:1.35;}
+.ab-title{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:3px;text-align:center;}
+.about-text p{font-size:15px;color:var(--muted);line-height:1.85;margin-bottom:18px;}
+.about-text strong{color:var(--dark);font-weight:500;}
+.why-list{list-style:none;margin:22px 0 28px;}
+.why-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--dark);padding:9px 0;border-bottom:1px solid var(--border);}
+.why-list li:first-child{border-top:1px solid var(--border);}
+.why-list li::before{content:'✦';color:var(--gold);font-size:9px;margin-top:5px;flex-shrink:0;}
+.specialties{background:var(--cream);border-radius:3px;padding:18px 22px;margin-top:6px;}
+.spec-title{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);font-weight:500;margin-bottom:10px;}
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px;}
+.spec-item{font-size:12px;color:var(--muted);display:flex;align-items:flex-start;gap:6px;line-height:1.5;}
+.spec-item::before{content:'◆';font-size:7px;color:var(--gold);margin-top:4px;flex-shrink:0;}
+
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:0;}
+.srv{background:var(--warm);padding:38px 30px;transition:background .3s;cursor:default;}
+.srv:hover{background:var(--dark);}
+.srv:hover .srv-num{color:rgba(255,255,255,.06);}
+.srv:hover .srv-name{color:#fff;}
+.srv:hover .srv-desc{color:rgba(255,255,255,.52);}
+.srv:hover .srv-link{color:var(--gold-l);}
+.srv-num{font-family:var(--fd);font-size:68px;font-weight:700;color:var(--border);line-height:1;margin-bottom:14px;transition:color .3s;}
+.srv-icon{font-size:24px;margin-bottom:10px;display:block;}
+.srv-name{font-family:var(--fd);font-size:19px;font-weight:600;color:var(--dark);margin-bottom:9px;transition:color .3s;}
+.srv-desc{font-size:13px;color:var(--muted);line-height:1.72;margin-bottom:18px;transition:color .3s;}
+.srv-link{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--copper);font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:color .3s;}
+.srv-link::after{content:'→';}
+
+.audience{background:var(--maroon);padding:64px 8%;}
+.aud-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;}
+.aud-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:3px;padding:18px 14px;text-align:center;transition:background .2s;}
+.aud-card:hover{background:rgba(255,255,255,.12);}
+.aud-icon{font-size:20px;margin-bottom:8px;display:block;}
+.aud-label{font-size:12px;color:rgba(255,255,255,.72);line-height:1.4;}
+
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;}
+.proc-step{position:relative;}
+.proc-step:not(:last-child)::after{content:'';position:absolute;top:20px;right:-16px;width:32px;height:1px;background:linear-gradient(to right,rgba(201,150,58,.4),rgba(201,150,58,.05));}
+.proc-num{font-family:var(--fd);font-size:12px;font-weight:600;color:var(--gold);letter-spacing:.1em;display:flex;align-items:center;gap:7px;margin-bottom:16px;}
+.proc-num::after{content:'';display:block;width:18px;height:1px;background:var(--gold);opacity:.35;}
+.proc-title{font-family:var(--fd);font-size:17px;font-weight:600;color:var(--dark);margin-bottom:7px;}
+.proc-desc{font-size:13px;color:var(--muted);line-height:1.7;}
+
+.pricing{background:var(--warm);}
+.quote-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
+.quote-card{background:var(--cream);border:1px solid var(--border);border-radius:3px;padding:32px 26px;}
+.qc-icon{font-size:24px;display:block;margin-bottom:12px;}
+.qc-title{font-family:var(--fd);font-size:17px;font-weight:600;color:var(--dark);margin-bottom:9px;}
+.qc-desc{font-size:13px;color:var(--muted);line-height:1.72;}
+.quote-cta{background:var(--maroon);border-radius:3px;padding:36px 40px;}
+.qcta-inner{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+.qcta-heading{font-family:var(--fd);font-size:22px;font-weight:600;color:#fff;margin-bottom:8px;}
+.qcta-sub{font-size:14px;color:rgba(255,255,255,.6);line-height:1.7;max-width:420px;}
+.qcta-actions{display:flex;flex-direction:column;gap:10px;flex-shrink:0;}
+
+.testi-section{background:linear-gradient(160deg,#fdf5ec 0%,#faf0e2 100%);}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.tcard{background:var(--warm);border-radius:3px;padding:30px 26px;position:relative;}
+.tcard::before{content:'"';font-family:var(--fd);font-size:68px;line-height:.8;color:var(--copper);opacity:.12;position:absolute;top:18px;left:22px;}
+.t-stars{color:var(--gold);font-size:12px;letter-spacing:2px;margin-bottom:12px;}
+.t-text{font-family:var(--fd);font-size:14px;font-style:italic;color:var(--dark);line-height:1.78;margin-bottom:18px;}
+.t-author{display:flex;align-items:center;gap:10px;}
+.t-av{width:38px;height:38px;border-radius:50%;background:var(--maroon);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:13px;color:#fff;font-weight:600;flex-shrink:0;}
+.t-name{font-size:13px;font-weight:500;color:var(--dark);}
+.t-role{font-size:11px;color:var(--muted);}
+
+.faq{background:var(--warm);}
+.faq-inner{max-width:800px;margin:0 auto;}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.faq-item{border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+.faq-q{width:100%;background:none;border:none;padding:17px 19px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:var(--fb);font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;transition:background .2s;}
+.faq-q:hover{background:var(--cream);}
+.faq-icon{font-size:17px;color:var(--copper);transition:transform .3s;flex-shrink:0;}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .2s;padding:0 19px;font-size:13px;color:var(--muted);line-height:1.75;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-item.open .faq-a{max-height:240px;padding:0 19px 17px;}
+
+.booking-sec{background:var(--maroon);text-align:center;padding:96px 8%;}
+.booking-sec h2{color:#fff;}
+.booking-sec .sec-tag{color:var(--gold-l);justify-content:center;}
+.booking-sec .sec-tag::before{background:var(--gold-l);}
+.booking-sec .sec-sub{color:rgba(255,255,255,.55);margin:0 auto 40px;text-align:center;}
+.contact-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;max-width:660px;margin:0 auto 40px;}
+.ccard{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:3px;padding:18px 22px;text-align:left;text-decoration:none;transition:background .2s;display:block;}
+.ccard:hover{background:rgba(255,255,255,.14);}
+.cc-icon{font-size:18px;margin-bottom:7px;display:block;}
+.cc-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:500;margin-bottom:3px;}
+.cc-val{font-size:14px;font-weight:500;color:#fff;}
+.cc-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px;}
+.bform{max-width:510px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.bform input,.bform select,.bform textarea{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:2px;padding:12px 14px;color:#fff;font-family:var(--fb);font-size:13px;outline:none;transition:border-color .2s;width:100%;}
+.bform input::placeholder,.bform textarea::placeholder{color:rgba(255,255,255,.38);}
+.bform select{color:rgba(255,255,255,.7);}
+.bform select option{color:var(--dark);background:#fff;}
+.bform input:focus,.bform select:focus,.bform textarea:focus{border-color:rgba(255,255,255,.45);}
+.bform .s2{grid-column:1/-1;}
+.bform textarea{resize:vertical;min-height:88px;}
+.sub-btn{grid-column:1/-1;background:var(--gold);color:var(--dark);border:none;padding:14px;border-radius:2px;font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .2s;font-family:var(--fb);}
+.sub-btn:hover{background:var(--gold-l);}
+.form-note{grid-column:1/-1;font-size:11px;color:rgba(255,255,255,.35);text-align:center;}
+
+footer{background:var(--dark);color:rgba(255,255,255,.52);padding:52px 8% 28px;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.footer-logo{font-family:var(--fd);font-size:30px;font-weight:900;color:#fff;margin-bottom:10px;}
+.footer-logo span{color:var(--gold-l);}
+.footer-tagline{font-family:var(--fd);font-style:italic;font-size:11px;color:rgba(255,255,255,.3);margin-top:4px;margin-bottom:12px;}
+.footer-desc{font-size:13px;line-height:1.75;max-width:250px;}
+.fc-head{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.28);font-weight:500;margin-bottom:12px;}
+.fc-list{list-style:none;}
+.fc-list li{margin-bottom:8px;}
+.fc-list a{color:rgba(255,255,255,.52);text-decoration:none;font-size:13px;transition:color .2s;}
+.fc-list a:hover{color:var(--gold-l);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.footer-copy{font-size:12px;}
+.footer-motto{font-family:var(--fd);font-style:italic;font-size:12px;color:rgba(255,255,255,.28);}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:960px){
+  .nav-links,.nav-cta{display:none;}
+  .hamburger{display:flex;}
+  .hero{grid-template-columns:1fr;min-height:auto;}
+  .hero-right{min-height:300px;}
+  .hero-left{padding:56px 6%;}
+  .hero-chips{display:none;}
+  .about-grid{grid-template-columns:1fr;}
+  .about-visual{max-width:280px;margin:0 auto;}
+  .services-grid{grid-template-columns:1fr;}
+  .process-grid{grid-template-columns:1fr 1fr;gap:26px;}
+  .proc-step::after{display:none;}
+  .testi-grid{grid-template-columns:1fr;}
+  .price-cards{grid-template-columns:1fr;}
+  .quote-grid{grid-template-columns:1fr;}
+  .qcta-inner{flex-direction:column;}
+  .faq-grid{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;gap:26px;}
+  .footer-bottom{flex-direction:column;text-align:center;}
+  section{padding:68px 6%;}
+}
+@media(max-width:600px){
+  h1{font-size:32px;}
+  h2{font-size:25px;}
+  .process-grid{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr;}
+  .bform{grid-template-columns:1fr;}
+  .aud-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="#home" class="nav-logo"><img src="https://karthiksharanbalasubramanian.github.io/wechef-site/logo.png" alt="WeChef" style="height:60px;width:auto;border-radius:50%;border:2px solid #c9963a;padding:3px;background:#fff;"></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#booking" class="nav-cta">Book a Session</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#services" onclick="closeMenu()">Services</a>
+  <a href="#pricing" onclick="closeMenu()">Pricing</a>
+  <a href="#testimonials" onclick="closeMenu()">Reviews</a>
+  <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <a href="#booking" onclick="closeMenu()" style="color:var(--copper);font-weight:500;">Book a session →</a>
+</div>
+
+<section class="hero" id="home">
+  <div class="hero-left">
+    <span class="eyebrow">Elevate · Learn · Excel</span>
+    <h1>Elevate your cooking skills to <em>Professional Excellence</em></h1>
+    <p class="hero-sub">Professional culinary training for beginners, home cooks, and newly / existing culinary entrepreneurs across South India.</p>
+    <blockquote class="hero-tagline">"Your kitchen, our passion — let's cook something extraordinary together."</blockquote>
+    <div class="btn-row">
+      <a href="#booking" class="btn-primary">Book Your Training</a>
+      <a href="#services" class="btn-ghost">Explore services</a>
+    </div>
+    <div class="hero-chips">
+      <span class="chip">Tamil Nadu</span>
+      <span class="chip">Bangalore</span>
+      <span class="chip">South-Eastern Kerala</span>
+      <span class="chip">We come to you</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-ring">
+        <div class="hero-ring-inner">
+          <img src="https://karthiksharanbalasubramanian.github.io/wechef-site/logo.png" alt="WeChef" style="width:200px;height:200px;object-fit:contain;border-radius:50%;border:2px solid #c9963a;padding:3px;background:#fff;">
+        </div>
+      </div>
+      <p class="hero-motto">"We come to your destination and guide your food which you gonna implement on your menu."</p>
+      <div class="hero-strip">
+        <span class="hs-seg">Elevate</span>
+        <span class="hs-seg">Learn</span>
+        <span class="hs-seg">Excel</span>
+      </div>
+    </div>
+    <div class="fcard fc1">
+      <div class="fc-tag">Latest workshop</div>
+      <div class="fc-title">Biryani Mastery</div>
+    </div>
+    <div class="fcard fc2">
+      <div class="fc2-inner">
+        <div class="fc2-label">Our reach</div>
+        <div class="fc2-val">Pan South India</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="coverage-bar">
+  <span class="cov-label">We come to you —</span>
+  <span class="cov-pin">📍 Tamil Nadu</span>
+  <span class="cov-dot"></span>
+  <span class="cov-pin">📍 Bangalore</span>
+  <span class="cov-dot"></span>
+  <span class="cov-pin">📍 South-Eastern Kerala</span>
+</div>
+
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="about-visual reveal">
+      <div class="about-img" style="padding:0;overflow:hidden;">
+        <img src="https://karthiksharanbalasubramanian.github.io/wechef-site/chef_antony.png" alt="Chef Antony Jeno Raj S.L" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;">
+      </div>
+      <div class="about-badge">
+        <span class="ab-name">Chef Antony<br>Jeno Raj S.L</span>
+        <span class="ab-title">Founder</span>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <span class="sec-tag">About WeChef</span>
+      <h2>Professional training, <em>your kitchen</em></h2>
+      <p>WeChef was built on a simple belief: every aspiring cook and food entrepreneur deserves access to <strong>real, hands-on culinary expertise</strong> — right at their own kitchen, their own space.</p>
+      <p>Led by <strong>Chef Antony Jeno Raj S.L</strong>, WeChef provides freelance culinary training across Tamil Nadu, Bangalore, and South-Eastern Kerala — personalised to your goals and your business.</p>
+      <ul class="why-list">
+        <li>Freelance culinarians across Tamil Nadu, Bangalore & South-Eastern Kerala</li>
+        <li>Hands-on, practical cooking — learn by doing</li>
+        <li>Beginner-friendly, patient teaching approach</li>
+        <li>Flexible scheduling to suit your timeline</li>
+        <li>Personalised training plans & custom menus</li>
+        <li>Industry-level skills for real-world success</li>
+      </ul>
+      <div class="specialties">
+        <div class="spec-title">Our specialties</div>
+        <div class="spec-grid">
+          <span class="spec-item">South Indian & Multi-Cuisine mastery</span>
+          <span class="spec-item">Biryani craftsmanship — dum, tawa & more</span>
+          <span class="spec-item">QSR & cloud kitchen business models</span>
+          <span class="spec-item">Mocktail & beverage bars for entrepreneurs</span>
+          <span class="spec-item">Baking fundamentals to advanced pastry arts</span>
+          <span class="spec-item">Menu planning & food cost management</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="reveal" style="text-align:center;margin-bottom:48px;">
+    <span class="sec-tag" style="justify-content:center;">Training services offered</span>
+    <h2>Six ways we <em>elevate</em> your kitchen</h2>
+    <p class="sec-sub" style="margin:0 auto;">Tailored for food entrepreneurs, hotels, restaurants, cafes, home cooks, culinary students, and catering teams.</p>
+  </div>
+  <div class="services-grid">
+    <div class="srv reveal">
+      <div class="srv-num">01</div>
+      <span class="srv-icon">🍽️</span>
+      <div class="srv-name">QSR Model Cuisines</div>
+      <p class="srv-desc">Quick Service Restaurant-style cooking for modern food businesses. Master the speed, consistency, and systems that QSR and cloud kitchen models demand.</p>
+      <a href="#booking" class="srv-link">Book this service</a>
+    </div>
+    <div class="srv reveal">
+      <div class="srv-num">02</div>
+      <span class="srv-icon">🍛</span>
+      <div class="srv-name">Biryanis, Parotta & South Indian</div>
+      <p class="srv-desc">Authentic Madurai-style parotta, regional flavors and multi-cuisine. From dum biryani to tawa styles — master the dishes that define South Indian food culture.</p>
+      <a href="#booking" class="srv-link">Book this service</a>
+    </div>
+    <div class="srv reveal">
+      <div class="srv-num">03</div>
+      <span class="srv-icon">🎂</span>
+      <div class="srv-name">Baking, Desserts & Indian Sweets</div>
+      <p class="srv-desc">Classic bakes, pastries, halwa, ladoo and traditional Indian mithai. From fundamentals to advanced pastry arts — build a complete confectionery skill set.</p>
+      <a href="#booking" class="srv-link">Book this service</a>
+    </div>
+    <div class="srv reveal">
+      <div class="srv-num">04</div>
+      <span class="srv-icon">🥢</span>
+      <div class="srv-name">Chinese & Oriental</div>
+      <p class="srv-desc">Stir-fries, fried rice, noodles, Manchurian and Indo-Chinese favourites for restaurants and cloud kitchens. High-demand dishes your customers will love.</p>
+      <a href="#booking" class="srv-link">Book this service</a>
+    </div>
+    <div class="srv reveal">
+      <div class="srv-num">05</div>
+      <span class="srv-icon">🏪</span>
+      <div class="srv-name">Kitchen Management</div>
+      <p class="srv-desc">Operations, hygiene and team coordination. Learn how to run a profitable, efficient kitchen — from food cost management to staff workflow and quality control.</p>
+      <a href="#booking" class="srv-link">Book this service</a>
+    </div>
+    <div class="srv reveal">
+      <div class="srv-num">06</div>
+      <span class="srv-icon">⭐</span>
+      <div class="srv-name">Custom Workshops</div>
+      <p class="srv-desc">Tailored for individuals, groups and corporates. Tell us your goals and we will design a session — or a full programme — built entirely around your needs.</p>
+      <a href="#booking" class="srv-link">Book this service</a>
+    </div>
+  </div>
+</section>
+
+<div class="audience">
+  <div style="text-align:center;margin-bottom:32px;" class="reveal">
+    <span class="sec-tag" style="justify-content:center;color:var(--gold-l);">Available for</span>
+    <h2 style="color:#fff;">Who we <em style="color:var(--gold-l);">train</em></h2>
+  </div>
+  <div class="aud-grid">
+    <div class="aud-card reveal"><span class="aud-icon">🍴</span><div class="aud-label">Food Entrepreneurs</div></div>
+    <div class="aud-card reveal"><span class="aud-icon">🏨</span><div class="aud-label">Hotels & Restaurants</div></div>
+    <div class="aud-card reveal"><span class="aud-icon">☕</span><div class="aud-label">Neighbourhood Cafes</div></div>
+    <div class="aud-card reveal"><span class="aud-icon">🎓</span><div class="aud-label">Culinary Students</div></div>
+    <div class="aud-card reveal"><span class="aud-icon">🍲</span><div class="aud-label">Catering Teams</div></div>
+    <div class="aud-card reveal"><span class="aud-icon">🏠</span><div class="aud-label">Home Cooks & Bakers</div></div>
+    <div class="aud-card reveal"><span class="aud-icon">🏫</span><div class="aud-label">Institutions & Training Centers</div></div>
+  </div>
+</div>
+
+<section id="process">
+  <div style="text-align:center;margin-bottom:52px;" class="reveal">
+    <span class="sec-tag" style="justify-content:center;">How it works</span>
+    <h2>From first contact to <em>lasting mastery</em></h2>
+    <p class="sec-sub" style="margin:0 auto;">A simple process — we come to you, train you hands-on, and make sure the learning sticks.</p>
+  </div>
+  <div class="process-grid">
+    <div class="proc-step reveal">
+      <div class="proc-num">01</div>
+      <div class="proc-title">Get in touch</div>
+      <p class="proc-desc">Call, WhatsApp, or email us. Tell us who you are, where you are, and what you want to learn or achieve in your kitchen.</p>
+    </div>
+    <div class="proc-step reveal">
+      <div class="proc-num">02</div>
+      <div class="proc-title">Custom plan</div>
+      <p class="proc-desc">We design a personalised training plan and schedule — tailored to your skill level, business type, and goals. Flexible dates, your location.</p>
+    </div>
+    <div class="proc-step reveal">
+      <div class="proc-num">03</div>
+      <div class="proc-title">We come to you</div>
+      <p class="proc-desc">Chef Antony arrives at your kitchen for hands-on, practical sessions. Real techniques, real dishes — trained in your actual working environment.</p>
+    </div>
+    <div class="proc-step reveal">
+      <div class="proc-num">04</div>
+      <div class="proc-title">Implement & grow</div>
+      <p class="proc-desc">You walk away with new skills, custom recipes, and the confidence to implement them immediately. We stay available for follow-up support.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="reveal">
+    <span class="sec-tag">Pricing</span>
+    <h2>Flexible pricing, <em>built around you</em></h2>
+    <p class="sec-sub">Every business is different. We tailor our sessions and pricing to your specific needs — just reach out and we'll give you a personalised quote, fast.</p>
+  </div>
+  <div class="quote-grid reveal">
+    <div class="quote-card">
+      <span class="qc-icon">📅</span>
+      <div class="qc-title">Book by the day</div>
+      <p class="qc-desc">Need just one session? Or a full week of training? We work on a flexible day-rate basis — book exactly what you need, nothing more.</p>
+    </div>
+    <div class="quote-card">
+      <span class="qc-icon">📉</span>
+      <div class="qc-title">Better value the more you book</div>
+      <p class="qc-desc">The more training days you book at once, the lower your per-day rate. Great for restaurants, hotels, and teams wanting a full programme.</p>
+    </div>
+    <div class="quote-card">
+      <span class="qc-icon">🎯</span>
+      <div class="qc-title">Custom quotes for groups</div>
+      <p class="qc-desc">Corporate teams, institutions, and large groups get a fully tailored quote based on your requirements, team size, and training goals.</p>
+    </div>
+  </div>
+  <div class="quote-cta reveal">
+    <div class="qcta-inner" style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
+      <div class="qcta-text">
+        <div class="qcta-heading">Get your personalised quote</div>
+        <p class="qcta-sub">Call or WhatsApp Chef Antony directly — we'll discuss your needs and give you a clear, no-obligation quote within the same conversation.</p>
+      </div>
+      <div class="qcta-actions" style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;">
+        <a href="tel:6380480794" class="btn-primary">📞 Call 6380 480 794</a>
+       <a href="https://wa.me/916380480794" class="btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    WhatsApp us
+  </a>
+      <style>@media(max-width:960px){.qcta-actions{align-items:center !important;}}</style>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testi-section" id="testimonials">
+  <div style="text-align:center;margin-bottom:44px;" class="reveal">
+    <span class="sec-tag" style="justify-content:center;">Client reviews</span>
+    <h2>What our students <em>say</em></h2>
+  </div>
+  <div class="testi-grid">
+    <div class="tcard reveal">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-text">Chef Antony's biryani workshop completely changed how my restaurant's kitchen works. The dum technique he taught us is now our bestseller. Real, practical learning.</p>
+      <div class="t-author"><div class="t-av">MR</div><div><div class="t-name">Mohammed Rafiq</div><div class="t-role">Restaurant owner, Chennai</div></div></div>
+    </div>
+    <div class="tcard reveal">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-text">I started a cloud kitchen after WeChef's QSR training. The food cost management and kitchen operations guidance was worth every rupee. Highly recommend.</p>
+      <div class="t-author"><div class="t-av">PK</div><div><div class="t-name">Priya Kumar</div><div class="t-role">Cloud kitchen founder, Bangalore</div></div></div>
+    </div>
+    <div class="tcard reveal">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-text">The baking and pastry workshop was incredible. As a home baker trying to go professional, WeChef gave me the skills and confidence to launch my own bakery business.</p>
+      <div class="t-author"><div class="t-av">SL</div><div><div class="t-name">Sunita Lakshmi</div><div class="t-role">Home baker, Coimbatore</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="faq-inner">
+    <div style="text-align:center;margin-bottom:44px;" class="reveal">
+      <span class="sec-tag" style="justify-content:center;">FAQ</span>
+      <h2>Common <em>questions</em></h2>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">Do you come to my location?<span class="faq-icon">+</span></button><div class="faq-a">Yes — WeChef comes to you! All training sessions take place at your kitchen, cafe, restaurant, or home. We cover Tamil Nadu, Bangalore, and South-Eastern Kerala.</div></div>
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">How is pricing calculated?<span class="faq-icon">+</span></button><div class="faq-a">We work on a flexible day-rate basis. The more days you book at once, the better the per-day rate. Call or WhatsApp Chef Antony at 6380 480 794 for a personalised quote based on your needs — it only takes a few minutes.</div></div>
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">Who is this training for?<span class="faq-icon">+</span></button><div class="faq-a">WeChef trains food entrepreneurs, hotel and restaurant staff, cafe owners, culinary students, home cooks, catering teams, and institutions. Complete beginners are very welcome.</div></div>
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">Can I customise the training?<span class="faq-icon">+</span></button><div class="faq-a">Absolutely. Every session can be tailored to your specific cuisine, skill level, business type, and goals. We also offer fully custom workshop packages for groups and corporates.</div></div>
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">How do I book a session?<span class="faq-icon">+</span></button><div class="faq-a">Call or WhatsApp Chef Antony at 6380 480 794, email wechef2026@gmail.com, or fill in the booking form on this page. We respond to all enquiries promptly.</div></div>
+      <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">Are group or corporate sessions available?<span class="faq-icon">+</span></button><div class="faq-a">Yes. WeChef offers custom workshops for groups, corporate teams, and institutions. Get in touch with your requirements and we will put together a tailored programme and quote.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="booking-sec" id="booking">
+  <span class="sec-tag">Get started</span>
+  <h2>Book your culinary training</h2>
+  <p class="sec-sub">Reach out directly or fill in the form — we respond to every enquiry and get your training scheduled fast.</p>
+  <div class="contact-cards">
+    <a href="tel:6380480794" class="ccard">
+      <span class="cc-icon">📞</span>
+      <div class="cc-label">Call or WhatsApp</div>
+      <div class="cc-val">6380 480 794</div>
+      <div class="cc-sub">Anytime</div>
+    </a>
+    <a href="mailto:wechef2026@gmail.com" class="ccard">
+      <span class="cc-icon">✉️</span>
+      <div class="cc-label">Email us</div>
+      <div class="cc-val">wechef2026@gmail.com</div>
+      <div class="cc-sub">We reply fast</div>
+    </a>
+    <a href="https://instagram.com/wechef2026" class="ccard">
+      <span class="cc-icon">📷</span>
+      <div class="cc-label">Instagram</div>
+      <div class="cc-val">@wechef2026</div>
+      <div class="cc-sub">Follow us</div>
+    </a>
+  </div>
+  <form class="bform" onsubmit="handleSubmit(event)">
+    <input type="text" placeholder="Your name" required>
+    <input type="tel" placeholder="Phone / WhatsApp">
+    <input type="email" placeholder="Email address" class="s2">
+    <select class="s2">
+      <option value="" disabled selected>I am a...</option>
+      <option>Food entrepreneur</option>
+      <option>Hotel / restaurant owner</option>
+      <option>Cafe owner</option>
+      <option>Culinary student</option>
+      <option>Home cook / baker</option>
+      <option>Catering team</option>
+      <option>Institution / training center</option>
+    </select>
+    <select>
+      <option value="" disabled selected>Service interested in</option>
+      <option>QSR Model Cuisines</option>
+      <option>Biryanis, Parotta & South Indian</option>
+      <option>Baking, Desserts & Indian Sweets</option>
+      <option>Chinese & Oriental</option>
+      <option>Kitchen Management</option>
+      <option>Custom Workshop</option>
+    </select>
+    <select>
+      <option value="" disabled selected>Number of days</option>
+      <option>1 day</option>
+      <option>2 days</option>
+      <option>3 days</option>
+      <option>4 days</option>
+      <option>5+ days</option>
+    </select>
+    <textarea placeholder="Tell us your goals, location, and any other details…" class="s2"></textarea>
+    <button type="submit" class="sub-btn">Send Enquiry — We'll Contact You Soon</button>
+    <p class="form-note">✦ No spam. We respond to every enquiry personally.</p>
+  </form>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo"><img src="https://karthiksharanbalasubramanian.github.io/wechef-site/logo.png" alt="WeChef" style="height:70px;width:auto;border-radius:50%;border:2px solid #c9963a;padding:3px;background:#fff;"></div>
+      <div class="footer-tagline">Elevate · Learn · Excel</div>
+      <p class="footer-desc">Professional culinary training for food entrepreneurs, restaurants, cafes, hotels, and home cooks across South India. We come to you.</p>
+    </div>
+    <div>
+      <div class="fc-head">Services</div>
+      <ul class="fc-list">
+        <li><a href="#services">QSR Cuisines</a></li>
+        <li><a href="#services">Biryanis & South Indian</a></li>
+        <li><a href="#services">Baking & Desserts</a></li>
+        <li><a href="#services">Chinese & Oriental</a></li>
+        <li><a href="#services">Kitchen Management</a></li>
+        <li><a href="#services">Custom Workshops</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="fc-head">Company</div>
+      <ul class="fc-list">
+        <li><a href="#about">About WeChef</a></li>
+        <li><a href="#process">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="fc-head">Contact</div>
+      <ul class="fc-list">
+        <li><a href="tel:6380480794">6380 480 794</a></li>
+        <li><a href="mailto:wechef2026@gmail.com">wechef2026@gmail.com</a></li>
+        <li><a href="https://instagram.com/wechef2026">@wechef2026</a></li>
+        <li><a href="#booking">Book a session</a></li>
+      </ul>
+      <div class="fc-head" style="margin-top:18px;">Coverage</div>
+      <ul class="fc-list">
+        <li><a href="#">Tamil Nadu</a></li>
+        <li><a href="#">Bangalore</a></li>
+        <li><a href="#">South-Eastern Kerala</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2024 WeChef · Chef Antony Jeno Raj S.L · All rights reserved.</span>
+    <span class="footer-motto">"Your kitchen, our passion."</span>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',scrollY>50);
+});
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+function closeMenu(){document.getElementById('mobileMenu').classList.remove('open');}
+
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*65);obs.unobserve(e.target);}
+  });
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+
+
+
+function toggleFaq(btn){
+  const item=btn.closest('.faq-item'),open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!open)item.classList.add('open');
+}
+
+const API_URL = "https://wechef-api.onrender.com";
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.sub-btn');
+  const form = e.target;
+  const selects = form.querySelectorAll('select');
+
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  const body = {
+    name:    form.querySelector('input[type="text"]')?.value || '',
+    phone:   form.querySelector('input[type="tel"]')?.value || '',
+    email:   form.querySelector('input[type="email"]')?.value || '',
+    type:    selects[0]?.value || '',
+    service: selects[1]?.value || '',
+    days:    selects[2]?.value || '',
+    message: form.querySelector('textarea')?.value || '',
+  };
+
+  try {
+    const res = await fetch(API_URL + '/enquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    btn.textContent = '❖ Enquiry sent! Chef Antony will contact you soon.';
+    btn.style.background = '#1a5e1a';
+    form.querySelectorAll('input,select,textarea').forEach(i => i.disabled = true);
+  } catch(err) {
+    btn.textContent = 'Something went wrong — please call us directly.';
+    btn.style.background = '#a32d2d';
+    btn.disabled = false;
+    setTimeout(() => { btn.textContent = "Send Enquiry — We'll Contact You Soon"; btn.style.background = ''; }, 4000);
+  }
+}
+</script>
+</body>
+</html>
