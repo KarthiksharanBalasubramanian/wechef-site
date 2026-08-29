@@ -784,12 +784,19 @@ async function handleSubmit(e) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed');
-    btn.textContent = '❖ Enquiry sent! Chef Antony will contact you soon.';
-    btn.style.background = '#1a5e1a';
-    form.querySelectorAll('input,select,textarea').forEach(i => i.disabled = true);
-  } catch(err) {
+   const data = await res.json();
+
+if (!res.ok) throw new Error(data.error || 'Failed');
+
+// Google Ads conversion — successful lead form submission
+if (typeof gtag === 'function') {
+  gtag('event', 'conversion_event_submit_lead_form_1', {});
+}
+    
+btn.textContent = '❖ Enquiry sent! Chef Antony will contact you soon.';
+btn.style.background = '#1a5e1a';
+form.querySelectorAll('input,select,textarea').forEach(i => i.disabled = true);
+} catch(err) {
     btn.textContent = 'Something went wrong — please call us directly.';
     btn.style.background = '#a32d2d';
     btn.disabled = false;
